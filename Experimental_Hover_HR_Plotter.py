@@ -44,7 +44,7 @@ true_distance_df = true_distance_df[true_distance_df['Luminosity'] != '0']
 
 true_distance_df['Teff'] = true_distance_df['Teff'].astype(float)
 true_distance_df['Luminosity'] = true_distance_df['Luminosity'].astype(float)
-# MOVED LOGGING TRUE_DISTANCE_DF['DISTANCE'] TO BEFORE EVOLTUION TYPE SPLIT - ISSUES LATER?
+# MOVED LOGGING TRUE_DISTANCE_DF['DISTANCE'] TO BEFORE EVOLUTION TYPE SPLIT - ISSUES LATER?
 true_distance_df['Distance'] = true_distance_df['Distance'].astype(float)
 true_distance_df['Distance'] = np.log(true_distance_df['Distance'])
 
@@ -116,12 +116,12 @@ app.layout = html.Div([
     Output("graph-tooltip", "children"),
     Input("graph-basic-2", "hoverData"),
 )
-def display_hover(hoverData):
-    if hoverData is None:
+def display_hover(hoverdata):
+    if hoverdata is None:
         return False, no_update, no_update
 
     # Will only show the first point, but other points may also be available if highly stacked
-    pt = hoverData["points"][0]
+    pt = hoverdata["points"][0]
     bbox = pt["bbox"]
     num = pt["pointNumber"]
 
@@ -136,9 +136,9 @@ def display_hover(hoverData):
         html.Div([
             html.Img(src=img_src, style={"width": "100%"}),
             html.P(f"Gaia DR3 {name}", style={"color": "darkblue"}),
-            html.P(f"{temperature:.0f}K"),
-            html.P(f"{luminosity:.4f} L☉"),
-            html.P(f"{distance:.0f}pc"),
+            html.P(f"T={temperature:.0f}K"),
+            html.P(f"L={luminosity:.4f} L☉"),
+            html.P(f"d={distance:.0f}pc"),
         ], style={'width': '250px', 'white-space': 'normal'})
     ]
 
