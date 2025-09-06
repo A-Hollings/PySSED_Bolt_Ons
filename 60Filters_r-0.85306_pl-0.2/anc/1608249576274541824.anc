@@ -1,0 +1,14 @@
+# parameter	catname	colname	value	err	priority	mask
+RA	Gaia	RA	214.46512833479	2.8722222222222222e-08	0	True
+Dec	Gaia	Dec	53.4661712065	3.0666666666666663e-08	0	True
+PMRA	Gaia	PMRA	5.559	0.12700000405311584	0	True
+PMDec	Gaia	PMDec	-8.027	0.13899999856948853	0	True
+Parallax	Gaia	Plx	1.2017	0.1314	10	True
+Distance	BailerJones	rgeo	829.345276	76.74307250000004	9	True
+Tspec	GaiaApsis	Teff	3758.032	0	9	True
+logg	GaiaApsis	logg	4.8506	0	9	True
+FeH	GaiaApsis	__Fe_H_	-0.5782	0	9	True
+E(B-V)	Internal	GTomo	0.009719354838709678	0.0	0	True
+Teff	Fitted	Fitted	3639.204900925979	0.0	0	True
+Luminosity	Fitted	Fitted	0.03337308503956959	0.0	0	True
+Radius	Fitted	Fitted	0.5293530029845633	0.0	0	True
