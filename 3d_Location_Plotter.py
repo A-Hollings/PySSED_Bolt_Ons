@@ -1,70 +1,62 @@
 # Import modules
 
-import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 pio.renderers.default = "browser"
 
+def load_and_clean_data(filepath, drop_rows=5, columns_mapping=None):
 
-# Import data
+    # Load a CSV file and prepare a cleaned DataFrame.
 
-hrd_df = pd.read_csv('60Filters_r-0.85306_pl-0.2/hrd.dat', sep = '\t', header = 1)
-anc_df = pd.read_csv('60Filters_r-0.85306_pl-0.2/anc1.txt', sep = '\t', header = 0)
+    # columns_mapping: dict mapping new column names -> original column names
 
-# 'Jury-rigging' the distance variable from the incorrectly read table
+    df = pd.read_csv(filepath, sep='\t', header=3, low_memory=False)
+    df = df.drop(df.index[:drop_rows], axis=0)
 
-dist = anc_df['Distance']
-dist = dist.astype(float)
+    if columns_mapping:
+        cleaned_df = pd.DataFrame()
+        for new_col, orig_col in columns_mapping.items():
+            cleaned_df[new_col] = df[orig_col]
+        return cleaned_df
+    return df
 
-dist_min = np.min(dist)
-dist_max = np.max(dist)
+def filter_and_convert(df, filter_cols, numeric_cols):
 
-if dist_min < 200:
-    dist_min = 200
-if dist_max > 7000:
-    dist_max = 7000
+    # Remove rows where filter_cols have zero or invalid entries.
+    # Convert numeric_cols to float.
 
-# 'Jury-rigging' the RA variable from the incorrectly read table
+    for col in filter_cols:
+        df = df[df[col].astype(str) != '0']
+        df = df[df[col].astype(str) != '0.0']
+    for col in numeric_cols:
+        df[col] = df[col].astype(float)
+    return df
 
-ra = anc_df['RA']
-ra = ra.astype(float)
+if __name__ == "__main__":
+    # Load and clean data
+    columns_mapping = {
+        'Object': '#Object', 'RA': 'RA', 'Dec': 'Dec', 'Distance': 'Distance',
+        'Teff': 'Teff', 'Luminosity': 'Lum', 'log(g)': 'logg', 'E(B-V)': 'E(B-V)'
+    }
+    df = load_and_clean_data('60Filters_r-0.85306_pl-0.2/output.dat', columns_mapping=columns_mapping)
+    df = filter_and_convert(df, filter_cols=['Distance', 'Luminosity'], numeric_cols=['Teff', 'Luminosity', 'Distance'])
 
-ra_min = np.min(ra)
-ra_max = np.max(ra)
+    df['Distance'] = df['Distance'].astype(float)
+    df['RA'] = df['RA'].astype(float)
+    df['Dec'] = df['Dec'].astype(float)
+    df['Teff'] = df['Teff'].astype(float)
 
-if ra_min < 205:
-    ra_min = 205
-if ra_max > 218:
-    ra_max = 218
+    fig = px.scatter_3d(df, x='RA', y='Dec', z='Distance', color='Teff', title= 'Location in Space')
 
-# 'Jury-rigging' the dec variable from the incorrectly read table
+    fig.update_traces(
+        hovertemplate=(
+            "Right Ascension: %{x:.2f}°<br>"
+            "Declination: %{y:.2f}°<br>"
+            "Distance: %{z:.0f}pc<br>"
+            "Temperature: %{marker.color:.0f}K<br>"
+            "<extra></extra>"),marker_size=1)
+    fig.update_scenes(xaxis_showspikes=False, yaxis_showspikes=False, zaxis_showspikes=False)
+    fig.update_layout(title_x=0.5)
 
-dec = anc_df['Dec']
-dec = dec.astype(float)
-
-dec_min = np.min(dec)
-dec_max = np.max(dec)
-
-if dec_min < 47.5:
-    dec_min = 47.5
-if dec_max > 54:
-    dec_max = 54
-
-# Reading in temperature data and setting limits
-
-temp = hrd_df['Kelvin']
-temp_min = np.min(temp)
-temp_max = np.max(temp)
-
-if temp_min < 2000:
-    temp_min = 2000
-if temp_max > 10000:
-    temp_max = 10000
-
-fig = px.scatter_3d(x=ra, y=dec, z=dist, color=temp, title= 'Location in Space',
-                     labels=dict(x='Right Ascension (°)', y='Declination (°)', z='Distance (pc)', color='Temperature (K)'))
-
-fig.update_traces(marker_size=1)
-fig.update_layout(title_x=0.5)
-fig.show()
+    fig.show()
