@@ -1,24 +1,20 @@
 # Import modules
 
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
-from mpl_toolkits import mplot3d
-import matplotlib.colors as mcolors
+import plotly.express as px
+import plotly.io as pio
+pio.renderers.default = "browser"
 
-# Toggle interactive rotation
-# %matplotlib qt
 
 # Import data
 
-foldername = 'Actual_MiniJPAS_r-5_pl-0.1'
-hrd_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/PySSED Outputs/'+str(foldername)+'/hrd.dat', sep = '\t', header = 1)
-anc_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/PySSED Outputs/'+str(foldername)+'/anc1.txt', sep = '\t', header = 0)
+hrd_df = pd.read_csv('60Filters_r-0.85306_pl-0.2/hrd.dat', sep = '\t', header = 1)
+anc_df = pd.read_csv('60Filters_r-0.85306_pl-0.2/anc1.txt', sep = '\t', header = 0)
 
 # 'Jury-rigging' the distance variable from the incorrectly read table
 
-dist = anc_df['Distance_err']
-dist = dist.replace('--', )
+dist = anc_df['Distance']
 dist = dist.astype(float)
 
 dist_min = np.min(dist)
@@ -31,8 +27,7 @@ if dist_max > 7000:
 
 # 'Jury-rigging' the RA variable from the incorrectly read table
 
-ra = anc_df['RA_err']
-ra = ra.replace('--', )
+ra = anc_df['RA']
 ra = ra.astype(float)
 
 ra_min = np.min(ra)
@@ -45,8 +40,7 @@ if ra_max > 218:
 
 # 'Jury-rigging' the dec variable from the incorrectly read table
 
-dec = anc_df['Dec_err']
-dec = dec.replace('--', )
+dec = anc_df['Dec']
 dec = dec.astype(float)
 
 dec_min = np.min(dec)
@@ -68,23 +62,9 @@ if temp_min < 2000:
 if temp_max > 10000:
     temp_max = 10000
 
-# Creating figure
-fig = plt.figure(figsize=(15, 12))
-ax = plt.axes(projection='3d')
+fig = px.scatter_3d(x=ra, y=dec, z=dist, color=temp, title= 'Location in Space',
+                     labels=dict(x='Right Ascension (°)', y='Declination (°)', z='Distance (pc)', color='Temperature (K)'))
 
-# Creating plot
-sctt = ax.scatter3D(ra, dist, dec, c=temp, cmap='jet', norm=mcolors.LogNorm(vmin=temp_min, vmax=temp_max), s=0.01)
-ax.set_xlim(ra_min, ra_max)
-ax.set_ylim(dist_min, dist_max)
-ax.set_zlim(dec_min, dec_max)
-plt.title('3d Star Map of Survey Area')
-ax.set_xlabel('Right Ascension (deg)')
-ax.set_ylabel('Distance (pc)')
-ax.set_zlabel('Declination (deg)')
-fig.colorbar(sctt, ax=ax, label='Temperature (K)')
-
-# plt.savefig('C:/Users/alexh/Documents/UoM/Research Project/Output Images/'+ str(foldername) + ' 3d_map.png')
-
-# show plot
-
-plt.show()
+fig.update_traces(marker_size=1)
+fig.update_layout(title_x=0.5)
+fig.show()
