@@ -1,24 +1,23 @@
 import pandas as pd
 import numpy as np
-import plotly.graph_objects as go
 import plotly.express as px
-from ipywidgets import widgets
+
 
 # Loading the five individual catalogues
 
-b_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/Catalogues/Artificial Populations/Gaia Mag Sim/B.txt', sep='\s+',
+b_df = pd.read_csv('Data/Artificial_Populations/B.txt', sep='\s+',
                   usecols=['RAJ2000','Dist','Teff','Mbol'])
 
-i_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/Catalogues/Artificial Populations/Gaia Mag Sim/I.txt', sep='\s+',
+i_df = pd.read_csv('Data/Artificial_Populations/I.txt', sep='\s+',
                   usecols=['RAJ2000','Dist','Teff','Mbol'])
 
-r_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/Catalogues/Artificial Populations/Gaia Mag Sim/R.txt', sep='\s+',
+r_df = pd.read_csv('Data/Artificial_Populations/R.txt', sep='\s+',
                   usecols=['RAJ2000','Dist','Teff','Mbol'])
 
-u_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/Catalogues/Artificial Populations/Gaia Mag Sim/U.txt', sep='\s+',
+u_df = pd.read_csv('Data/Artificial_Populations/U.txt', sep='\s+',
                   usecols=['RAJ2000','Dist','Teff','Mbol'])
 
-v_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/Catalogues/Artificial Populations/Gaia Mag Sim/V.txt', sep='\s+',
+v_df = pd.read_csv('Data/Artificial_Populations/V.txt', sep='\s+',
                   usecols=['RAJ2000','Dist','Teff','Mbol'])
 
 merged_df = pd.merge(b_df, i_df, on=['RAJ2000','Teff','Dist','Mbol'], how='outer')
@@ -52,10 +51,6 @@ merged_df['OBJECT_ID'] = object_id
 filtered_merged_df = merged_df[~merged_df['OBJECT_ID'].duplicated(keep='first')]
 
 filtered_merged_df
-
-#r_df = pd.read_csv('C:/Users/alexh/Downloads/Gaia - R.txt', sep='\s+',
-                  #usecols=['RAJ2000','Dist','Teff','Mbol'])
-#merged_df= r_df
 
 # Converting from kpc to pc
 filtered_merged_df['Dist'] = 1000*filtered_merged_df['Dist']

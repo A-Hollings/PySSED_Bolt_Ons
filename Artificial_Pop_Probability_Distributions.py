@@ -3,8 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 from scipy import stats
+from scipy.stats import gaussian_kde
 
-full_v_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/Catalogues/Artificial Populations/V.txt', sep='\s+')
+full_v_df = pd.read_csv('Data/Artificial_Populations/V.txt', sep=r'\s+')
 
 trim_v_df = pd.DataFrame()
 trim_v_df['RA'] = full_v_df['RAJ2000']
@@ -42,9 +43,7 @@ plt.title(str(title))
 plt.gca().invert_xaxis()
 plt.gca().invert_yaxis()
 
-#plt.savefig('C:/Users/alexh/Documents/UoM/Research Project/Output Images/'+str(title)+'.png', dpi=300)
-
-plt.show(ax)
+plt.show()
 
 # Main Sequence Probability Distribution
 
@@ -102,8 +101,7 @@ plt.gca().invert_yaxis()
 plt.gca().invert_xaxis()
 plt.colorbar(label='PDF')
 
-plt.savefig('C:/Users/alexh/Documents/UoM/Research Project/Output Images/Three Separate PDFs Together.png', dpi=300)
-
+#plt.savefig('Three_Separate_PDFs_Combined.png', dpi=300)
 plt.show()
 
 # All stars grouped probability distribution
@@ -130,11 +128,9 @@ plt.gca().invert_yaxis()
 plt.gca().invert_xaxis()
 plt.colorbar(label='PDF')
 
-plt.savefig('C:/Users/alexh/Documents/UoM/Research Project/Output Images/All Stars.png', dpi=300)
+#plt.savefig('All_Stars.png', dpi=300)
+plt.show()
 
-#plt.show()
-
-pdf_values.min()
 
 # Only Main Sequence
 
@@ -148,15 +144,9 @@ plt.gca().invert_xaxis()
 colorbar = plt.colorbar(label='PDF')
 #colorbar.set_ticks([10**-3,10**-4,10**-5])
 
-plt.savefig('C:/Users/alexh/Documents/UoM/Research Project/Output Images/Only Main Sequence.png', dpi=300)
-
+#plt.savefig('Only_Main_Sequence.png', dpi=300)
 plt.show()
 
-#
-
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import gaussian_kde
 
 # Generate random data for demonstration purposes
 np.random.seed(0)

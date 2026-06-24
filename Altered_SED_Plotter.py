@@ -1,3 +1,9 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from matplotlib.colors import ListedColormap
+
 # ORIGINAL FUNCTION
 
 def plotsed(sed, modwave, modflux, plotfile):
@@ -41,6 +47,7 @@ def plotsed(sed, modwave, modflux, plotfile):
                  capsize=0, zorder=10)
 
     # Clip the plot if data too faint
+    # 'pyssedsetupdata' is unused in this modification but keeping here for visibility as it was utilised in the original
     maxrange = float(pyssedsetupdata[pyssedsetupdata[:, 0] == "MaxSEDPlotFluxRange", 1])
     maxflux = np.max(y)
     minflux = np.min(y)
@@ -54,11 +61,6 @@ def plotsed(sed, modwave, modflux, plotfile):
     yerr = 0
     plt.errorbar(x, y, xerr=xerr, yerr=yerr, fmt='+', markersize=4, color='#FFAAAA00', ecolor='#FFAAAA00', elinewidth=1,
                  capsize=0, zorder=10)
-
-    # Decide whether to put the inset on top or bottom,
-    # based on whether the left or right quarter of the model points are higher
-    lhs = np.average(np.log10(y[:int(len(y) / 4)]))
-    rhs = np.average(np.log10(y[-int(len(y) / 4):]))
 
     # Plot the dereddened data
     # Plot all the data
@@ -85,12 +87,6 @@ def plotsed(sed, modwave, modflux, plotfile):
 
 ########################################################################################################################
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-from matplotlib.colors import ListedColormap
-
 def colourmap(opacity):
     # Set up colour map
     n = 128
@@ -108,9 +104,9 @@ def colourmap(opacity):
 
 # MODIFICATION ATTEMPT
 
-# Load sed file
+# Load sed file. Point it to a specific one, this is left in to show the standard file path.
 
-sed=pd.read_csv('G:/My Drive/Uni Data/Only Gaia/New_Gaia_0.2/sed/1608004247742692608.sed', sep='\t')
+sed=pd.read_csv('Data/60Filters_r-0.85306_pl-0.2/sed/1604828999897185536.sed', sep='\t')
 
 # Sort out missing variables
 

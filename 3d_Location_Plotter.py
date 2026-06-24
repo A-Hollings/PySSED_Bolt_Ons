@@ -39,7 +39,7 @@ if __name__ == "__main__":
         'Object': '#Object', 'RA': 'RA', 'Dec': 'Dec', 'Distance': 'Distance',
         'Teff': 'Teff', 'Luminosity': 'Lum', 'log(g)': 'logg', 'E(B-V)': 'E(B-V)'
     }
-    df = load_and_clean_data('60Filters_r-0.85306_pl-0.2/output.dat', columns_mapping=columns_mapping)
+    df = load_and_clean_data('Data/60Filters_r-0.85306_pl-0.2/output.dat', columns_mapping=columns_mapping)
     df = filter_and_convert(df, filter_cols=['Distance', 'Luminosity'], numeric_cols=['Teff', 'Luminosity', 'Distance'])
 
     df['Distance'] = df['Distance'].astype(float)

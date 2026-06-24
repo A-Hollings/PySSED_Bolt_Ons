@@ -1,23 +1,22 @@
 # Import modules
 
-# %matplotlib qt
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
 import matplotlib.colors as mcolors
 
-hrd_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/PySSED Outputs/MiniJPAS_First20_r-0.85709/hrd.dat', sep = '\t', header = 1)
-anc_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/PySSED Outputs/MiniJPAS_First20_r-0.85709/anc.dat', sep = '\t', header = 0)
+hrd_df = pd.read_csv('Data/60Filters_r-0.85306_pl-0.2/hrd.dat', sep = '\t', header = 1)
+anc_df = pd.read_csv('Data/60Filters_r-0.85306_pl-0.2/anc.dat', sep = '\t', header = 0)
 
 dist = anc_df['Distance']
 
-dist = dist.replace('--',)
+dist = dist.replace('--',np.nan)
 
 dist = dist.astype(float)
 
-dist_min = np.min(dist)
-dist_max = np.max(dist)
+dist_min = np.nanmin(dist)
+dist_max = np.nanmax(dist)
 
 # Removing any problematic or miscalculated values (e.g 0 or NaN). You might want to up the limits for yours seeing as I think you said your stars are ~24kpc away
 
@@ -49,20 +48,26 @@ if lumin_max > 10000:
 # Find isocrone folder
 # For me, I've kept all my isochrones in one folder, and only them, much easier for me to read them in that way.
 
-path, dirs, files = next(os.walk('C:/Users/alexh/Documents/UoM/Research Project/Data/Isochrones/'))
-file_count = len(files)
+isochrone_dir = 'Data/Isochrones'
 
-# Create empty list and label columns <-- It didn't like reading in headers normally so I had to do it manually.
+if not os.path.isdir(isochrone_dir):
+    raise FileNotFoundError(f"Isochrones directory not found: '{isochrone_dir}'. "
+                            f"Check the path is correct relative to your working directory.")
 
-isochrones_list = []
+_, _, files = next(os.walk(isochrone_dir))
+files = [f for f in files if f.endswith('.dat')]
+
+# Label columns <-- It didn't like reading in headers normally so I had to do it manually.
+
 colnames = ['Zini', 'MH', 'logAge', 'Mini', 'int_IMF', 'Mass', 'logL', 'logTe', 'logg', 'label', 'McoreTP', 'C_0',
             'period0', 'period1', 'period2', 'period3', 'period4', 'pmode', 'Mloss', 'tau1m', 'X', 'Y', 'Xc', 'Xn',
             'Xo', 'Cexcess', 'Z', 'mbolmag', 'Umag', 'Bmag', 'Vmag', 'Rmag', 'Imag', 'Jmag', 'Hmag', 'Kmag']
 
 # Append isochrones to the list
 
-for i in range(file_count):
-    temp_df = pd.read_csv('C:/Users/alexh/Documents/UoM/Research Project/Data/Isochrones/' + files[i], sep='\s+',
+isochrones_list = []
+for filename in files:
+    temp_df = pd.read_csv(os.path.join(isochrone_dir, filename), sep=r'\s+',
                           header=13, names=colnames, index_col=False)
     isochrones_list.append(temp_df)
 
@@ -70,8 +75,8 @@ for i in range(file_count):
 # Also define the cut-point for get rid of messy part of isochrones (via decimal) <-- Gets rid of that horrific looking swiggle when it starts the horizontal
 # giant branch and then down into the white dwarfs.
 
+cut_fraction = 0.55
 for isochrone in isochrones_list:
-    cut_fraction = 0.55
     isochrone.drop(isochrone.tail(round(len(isochrone) * cut_fraction)).index, inplace=True)
     # print(isochrone)
 
@@ -108,6 +113,5 @@ plt.gca().set_yscale('log')
 plt.gca().invert_xaxis()
 plt.colorbar(points, label ='Distance (pc)')
 
-plt.savefig('C:/Users/alexh/Documents/UoM/Research Project/Output Images/H-R Diagram.png', dpi=300)
-
-plt.show(ax)
+#plt.savefig('H-R Diagram_Isocroned.png', dpi=300)
+plt.show()

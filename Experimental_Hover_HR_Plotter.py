@@ -143,7 +143,7 @@ if __name__ == "__main__":
         'Object': '#Object', 'RA': 'RA', 'Dec': 'Dec', 'Distance': 'Distance',
         'Teff': 'Teff', 'Luminosity': 'Lum', 'log(g)': 'logg', 'E(B-V)': 'E(B-V)'
     }
-    df = load_and_clean_data('60Filters_r-0.85306_pl-0.2/output.dat', columns_mapping=columns_mapping)
+    df = load_and_clean_data('Data/60Filters_r-0.85306_pl-0.2/output.dat', columns_mapping=columns_mapping)
 
     # Filter and convert
     df = filter_and_convert(df, filter_cols=['Distance', 'Luminosity'], numeric_cols=['Teff', 'Luminosity', 'Distance'])
@@ -153,7 +153,7 @@ if __name__ == "__main__":
     wd_df, rg_df, ms_df = split_stars_by_stage(df)
 
     # Assign images
-    image_dir = "60Filters_r-0.85306_pl-0.2/Only MiniJPAS SEDs/png/"
+    image_dir = 'Data/60Filters_r-0.85306_pl-0.2/Only MiniJPAS SEDs/png/'
     df = assign_images(df, 'Object', image_dir)
 
     # Make plot
@@ -174,4 +174,4 @@ if __name__ == "__main__":
         Input("graph-basic-2", "hoverData")
     )(make_hover_callback(df))
 
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8050)
